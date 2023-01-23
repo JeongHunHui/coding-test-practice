@@ -9,13 +9,18 @@ class Solution
 
         for (int i = roundNum; i > 0; i--) {
             int middleNum = (int)Math.pow(2, i-1);
-            if((a > middleNum && b <= middleNum) || (a <= middleNum && b > middleNum)) return i;
             if(a > middleNum) {
+                if(b <= middleNum) return i;
+                a -= middleNum;
+                b -= middleNum;
+            }
+            else if(b > middleNum) {
+                if(a <= middleNum) return i;
                 a -= middleNum;
                 b -= middleNum;
             }
         }
-        
+
         return 0;
     }
 }
