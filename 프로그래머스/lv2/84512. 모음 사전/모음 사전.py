@@ -2,18 +2,19 @@ char_arr = ['A', 'E', 'I', 'O', 'U']
 words = []
 count = 0;
 answer = 0;
+is_finish = False
 
 def dfs(depth, word, answer_word):
-    global count
-    global answer
-    if depth == len(char_arr):
-        return
+    global count, answer, is_finish
     for i in range(len(char_arr)):
+        if depth == len(char_arr) or is_finish:
+            return
         count += 1
         word += char_arr[i]
         if word == answer_word:
             answer = count
-            break
+            is_finish = True
+            return
         dfs(depth+1,word,answer_word)
         word = word[0:-1]
         
