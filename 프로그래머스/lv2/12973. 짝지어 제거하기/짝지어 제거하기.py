@@ -1,18 +1,5 @@
 def solution(s):
-    answer = []
-    buffer = ''
-    for i in range(0, len(s)):
-        c = s[i]
-        if c != buffer:
-            if buffer != '':
-                answer.append(buffer)
-            buffer = c
-        else:
-            if len(answer) > 0:
-                buffer = answer.pop()
-            else:
-                buffer = ''
-    if buffer == '':
-        return 1
-    else:
-        return 0
+    answer = ['', s[0]]
+    for c in s[1:]:
+        answer.pop() if c == answer[-1] else answer.append(c)
+    return 0 if len(answer) > 1 else 1
