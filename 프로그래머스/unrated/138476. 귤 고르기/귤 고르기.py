@@ -1,16 +1,12 @@
+from collections import Counter
+
 def solution(k, tangerine):
-    tangerine_dict = {}
+    tangerine_counter = Counter(tangerine)
     deletable_count = len(tangerine) - k
-    for i in tangerine:
-        if i in tangerine_dict:
-            tangerine_dict[i] += 1
-        else:
-            tangerine_dict[i] = 1
-    type_count = len(tangerine_dict)
-    sorted_tangerine = sorted(tangerine_dict.items(), key=lambda x: x[1])
-    sorted_tangerine_dict = dict(sorted_tangerine)
-    for key in sorted_tangerine_dict:
-        deletable_count -= sorted_tangerine_dict[key]
+    type_count = len(tangerine_counter)
+    sorted_tangerine = sorted(tangerine_counter.items(), key=lambda x: x[1])
+    for tang in sorted_tangerine:
+        deletable_count -= tang[1]
         if deletable_count < 0:
             return type_count
         type_count -= 1
