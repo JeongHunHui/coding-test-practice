@@ -1,15 +1,17 @@
 def solution(k, tangerine):
-    # count_arr = [tangerine.count(i) for i in set(tangerine)]
-    # count_arr.sort(reverse = True)
-    answer = 0
-    count_dict = {}
+    tangerine_dict = {}
+    deletable_count = len(tangerine) - k
     for i in tangerine:
-        if i in count_dict: count_dict[i] += 1
-        else: count_dict[i] = 1
-    count_arr = list(count_dict.values())
-    count_arr.sort(reverse = True)
-    for count in count_arr:
-        answer += 1
-        k -= count
-        if k <= 0: break
-    return answer
+        if i in tangerine_dict:
+            tangerine_dict[i] += 1
+        else:
+            tangerine_dict[i] = 1
+    type_count = len(tangerine_dict)
+    sorted_tangerine = sorted(tangerine_dict.items(), key=lambda x: x[1])
+    sorted_tangerine_dict = dict(sorted_tangerine)
+    for key in sorted_tangerine_dict:
+        deletable_count -= sorted_tangerine_dict[key]
+        if deletable_count < 0:
+            return type_count
+        type_count -= 1
+    return type_count
