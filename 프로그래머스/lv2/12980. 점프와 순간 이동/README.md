@@ -1,10 +1,10 @@
 # [level 2] 점프와 순간 이동 - 12980 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/12980) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/12980?language=python3) 
 
 ### 성능 요약
 
-메모리: 51.9 MB, 시간: 0.02 ms
+메모리: 10.3 MB, 시간: 0.01 ms
 
 ### 구분
 
@@ -12,7 +12,7 @@
 
 ### 채점결과
 
-<br/>정확성: 60.0<br/>효율성: 40.0<br/>합계: 100.0 / 100.0
+Empty
 
 ### 문제 설명
 
