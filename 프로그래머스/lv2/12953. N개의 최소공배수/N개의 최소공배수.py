@@ -1,4 +1,13 @@
-from math import gcd
+def gcd(a,b):
+    if b > a:
+        i = a
+        a = b
+        b = i
+    while b != 0:
+        n = a % b
+        a = b
+        b = n
+    return a
 
 def solution(arr):
     answer = arr[0]
