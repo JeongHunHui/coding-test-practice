@@ -1,13 +1,12 @@
 def solution(s):
+    num_list = []
+    for nums in s[2:-2].split('},{'):
+        num_list.append(list(map(int, nums.split(','))))
+    num_list.sort(key = len)
     answer = []
-    s = s[2:-2].split('},{')
-    s.sort(key = lambda x: len(x))
-    s = [list(map(int, data.split(','))) for data in s]
-    
-    for nums in s:
+    for nums in num_list:
         for num in nums:
             if num not in answer:
                 answer.append(num)
                 break
-
     return answer
