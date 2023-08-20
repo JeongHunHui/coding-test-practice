@@ -1,23 +1,21 @@
-is_visited = []
-answer = 0
+from itertools import permutations
 
-def dfs(depth, k, dungeons):
-    global answer
-    if depth == len(dungeons):
-        return
-    for i in range(0,len(dungeons)):
-        if is_visited[i]:
-            continue
-        dungeon = dungeons[i]
-        if k >= dungeon[0] and k-dungeon[1] >= 0:
-            if answer < depth + 1:
-                answer = depth + 1
-            is_visited[i] = True
-            dfs(depth+1, k-dungeon[1], dungeons)
-            is_visited[i] = False
+def explore_count(k, dungeon):
+    count = 0
+    for li in dungeon:
+        min_k, con_k = li
+        if min_k > k:
+            break
+        count += 1
+        k -= con_k
+    return count
 
 def solution(k, dungeons):
-    global is_visited
-    is_visited = [False for i in range(0,len(dungeons))]
-    dfs(0, k, dungeons);
-    return answer
+    dungeons = list(permutations(dungeons))
+    dungeon_count = len(dungeons)
+    max_explore_count = 0
+    for dungeon in dungeons:
+        max_explore_count = max(max_explore_count, explore_count(k, dungeon))
+        if max_explore_count == dungeon_count:
+            return max_explore_count
+    return max_explore_count
