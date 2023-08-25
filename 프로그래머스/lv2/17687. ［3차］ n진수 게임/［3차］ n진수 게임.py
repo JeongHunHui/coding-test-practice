@@ -3,23 +3,23 @@ import string
 num_string = string.digits + string.ascii_uppercase
 
 def convert_num(num, base):
-    s, r = divmod(num, base)
-    if s == 0: return num_string[r]
-    return convert_num(s, base) + num_string[r]
+    result = ""
+    while num > 0:
+        result += num_string[num % base]
+        num //= base
+    return result[::-1] if result != "" else '0'
 
 def solution(n, t, m, p):
-    answer = ''
-    count = 0
-    turn = 0
-    is_not_finish = True
-    while is_not_finish:
-        word = convert_num(turn, n)
-        for c in word:
-            if count % m + 1 == p:
+    current_num = 0
+    current_seq = 1
+    answer = ""
+    while True:
+        converted_num_str = convert_num(current_num, n)
+        for c in converted_num_str:
+            if current_seq == p:
                 answer += c
-                if len(answer) == t:
-                    is_not_finish = False
-                    break
-            count += 1
-        turn += 1
-    return answer
+            current_seq = current_seq % m + 1
+            if len(answer) >= t:
+                return answer
+        current_num += 1
+    return -1
