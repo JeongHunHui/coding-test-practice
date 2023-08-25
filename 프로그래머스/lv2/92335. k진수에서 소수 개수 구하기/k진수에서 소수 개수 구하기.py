@@ -1,16 +1,22 @@
-import string, math
+from collections import deque
+import math
 
-datas = string.digits+string.ascii_lowercase
+def convert_num_str(n, k):
+    digits = deque()
+    while n > 0:
+        digits.appendleft(str(n%k))
+        n //= k
+    return ''.join(digits)
 
-def convert_int(num, base):
-    s, r = divmod(num, base)
-    return datas[r] if s == 0 else str(convert_int(s, base)) + datas[r]
-
-def is_prime(num):
-    if num == 1: return False
-    for i in range(2,math.floor(math.sqrt(num))+1):
-        if num % i == 0:return False
+def is_prime(n):
+    if n == 1:
+        return False
+    for i in range(2, int(math.sqrt(n))+1):
+        if n % i == 0:
+            return False
     return True
     
 def solution(n, k):
-    return len([1 for c in convert_int(n,k).split('0') if c != '' and is_prime(int(c))])
+    converted_num_str = convert_num_str(n,k)
+    target_nums = converted_num_str.split('0')
+    return len([1 for x in target_nums if x != '' and is_prime(int(x))])
