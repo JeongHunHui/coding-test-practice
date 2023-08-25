@@ -1,25 +1,23 @@
-from collections import deque
+def make_dict():
+    big_a_num = ord('A')
+    big_z_num = ord('Z')
+    new_dict = {}
+    for i in range(big_a_num, big_z_num + 1):
+        new_dict[chr(i)] = i - big_a_num + 1
+    return new_dict
+
 def solution(msg):
+    msg_dict = make_dict()
     answer = []
-    word_dict = {}
-    start_index = ord('A')
-    end_index = ord('Z')+1
-    for i in range(start_index, end_index):
-        word_dict[chr(i)] = i - start_index + 1
-    queue = deque(msg)
-    word = ''
-    num = 0
-    end_index = 27
-    while queue:
-        new_char = queue.popleft()
-        word += new_char
-        if word in word_dict:
-            num = word_dict[word]
+    current_input = msg[0]
+    for i in range(1, len(msg)):
+        next_input = msg[i]
+        word = current_input + next_input
+        if word not in msg_dict:
+            answer.append(msg_dict[current_input])
+            msg_dict[word] = len(msg_dict) + 1
+            current_input = next_input
         else:
-            word_dict[word] = end_index
-            end_index += 1
-            word = ''
-            answer.append(num)
-            queue.appendleft(new_char)
-    answer.append(num)
+            current_input = word
+    answer.append(msg_dict[current_input])
     return answer
