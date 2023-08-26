@@ -1,39 +1,34 @@
 import math
 
+def get_time(start, finish):
+    start_hour, start_min = map(int, start.split(':'))
+    finish_hour, finish_min = map(int, finish.split(':'))
+    return 60 * (finish_hour - start_hour) + finish_min - start_min
+
 def solution(fees, records):
-    [base_time, base_fee, unit_time, unit_fee] = fees
-    
-    fee_dict = {}
-    
-    def get_minute(time_str):
-        [hour, minute] = list(map(int, time_str.split(':')))
-        return minute + hour * 60
-    
-    def get_term(start, end):
-        return get_minute(end) - get_minute(start)
-    
+    basic_time, basic_fee, time_term, term_fee = fees
     def calculate_fee(time):
-        total_time = time - base_time
-        if total_time <= 0: return base_fee
-        return math.ceil(total_time / unit_time) * unit_fee + base_fee
-    
+        left_time = time - basic_time
+        return basic_fee + math.ceil(left_time / time_term) * term_fee if left_time > 0 else basic_fee
+    car_dict = {}
     for record in records:
-        [time, num, in_out] = record.split(' ')
-        if in_out == 'IN':
-            fee_dict[num] = [0, time] if num not in fee_dict else [fee_dict[num][0], time]
+        time, num, in_out = record.split()
+        is_in = in_out == 'IN'
+        if is_in:
+            if num in car_dict:
+                car_dict[num][0] = time
+            else:
+                car_dict[num] = [time, 0]
         else:
-            [total_time, start] = fee_dict[num]
-            fee_dict[num] = [total_time + get_term(start, time), '']
-            
-    car_nums = list(fee_dict.keys())
-    car_nums.sort()
-    
-    answer = []
-    for car_num in car_nums:
-        [total_time, time] = fee_dict[car_num]
-        if time: total_time += get_term(time, '23:59')
-        answer.append(calculate_fee(total_time))
-    return answer
+            start_time, time_sum = car_dict[num]
+            car_dict[num] = [None, time_sum + get_time(start_time, time)]
+    car_nums = sorted(car_dict.keys())
+    for num in car_nums:
+        start_time, time_sum = car_dict[num]
+        if start_time != None:
+            time_sum += get_time(start_time, '23:59')
+            car_dict[num] = [None, time_sum]
+    return [calculate_fee(car_dict[i][1]) for i in car_nums]
 
     
     
