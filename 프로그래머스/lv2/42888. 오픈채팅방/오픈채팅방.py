@@ -1,12 +1,20 @@
 def solution(record):
-    chat_datas = []
-    name_dict = {}
+    nickname_dict = {}
+    def get_message(uid, act):
+        nickname = nickname_dict[uid]
+        return f'{nickname}님이 {"들어왔" if act == "Enter" else "나갔"}습니다.'
+    
+    info_list = []
     for log in record:
-        log_data = log.split(' ')
-        [action, uid] = log_data[0:2]
-        if action == "Change": name_dict[uid] = log_data[2]
-        else:
-            is_enter = action == "Enter"
-            chat_datas.append([uid, is_enter])
-            if is_enter: name_dict[uid] = log_data[2]
-    return [f'{name_dict[chat_data[0]]}님이 {"들어왔" if chat_data[1] else "나갔"}습니다.' for chat_data in chat_datas]
+        info = log.split()
+        act, uid = info[:2]
+        if act != 'Leave':
+            nickname = info[2]
+            nickname_dict[uid] = nickname
+        if act != 'Change':
+            info_list.append([uid, act])
+    answer = []
+    for info in info_list:
+        uid, act = info
+        answer.append(get_message(uid, act))
+    return answer
