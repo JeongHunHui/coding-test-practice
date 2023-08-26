@@ -1,11 +1,13 @@
-import heapq
+from heapq import heapify, heappush, heappop
+
 def solution(scoville, K):
-    heapq.heapify(scoville)
+    heapify(scoville)
     answer = 0
     while len(scoville) > 1:
-        min_scoville = heapq.heappop(scoville)
-        if min_scoville >= K: break
-        second_scoville = heapq.heappop(scoville)
-        heapq.heappush(scoville, min_scoville + second_scoville * 2)
+        first_value = heappop(scoville)
+        if first_value >= K:
+            return answer
+        second_value = heappop(scoville)
+        heappush(scoville, first_value + second_value * 2)
         answer += 1
-    return answer if heapq.heappop(scoville) >= K else -1
+    return answer if heappop(scoville) >= K else -1
