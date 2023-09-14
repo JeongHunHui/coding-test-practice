@@ -1,22 +1,21 @@
 from collections import deque
-import math
+from math import floor, sqrt
 
-def convert_num_str(n, k):
-    digits = deque()
+def base_conversion(n, k):
+    result = deque()
     while n > 0:
-        digits.appendleft(str(n%k))
+        result.appendleft(n%k)
         n //= k
-    return ''.join(digits)
+    return ''.join(str(num) for num in result)
 
-def is_prime(n):
-    if n == 1:
+def is_prime(num):
+    if num < 2:
         return False
-    for i in range(2, int(math.sqrt(n))+1):
-        if n % i == 0:
+    for i in range(2, floor(sqrt(num)) + 1):
+        if num % i == 0:
             return False
     return True
-    
+
 def solution(n, k):
-    converted_num_str = convert_num_str(n,k)
-    target_nums = converted_num_str.split('0')
-    return len([1 for x in target_nums if x != '' and is_prime(int(x))])
+    nums = base_conversion(n, k).split('0')
+    return len([1 for num in nums if num != '' and is_prime(int(num))])
