@@ -1,44 +1,54 @@
 import math
 
-out = 'OUT'
+def time_calculate(in_time, out_time):
+    in_hour, in_minute = list(map(int, in_time.split(':')))
+    out_hour, out_minute = list(map(int, out_time.split(':')))
+    return (out_hour - in_hour) * 60 + out_minute - in_minute
 
-def get_time(start, finish):
-    start_hour, start_min = map(int, start.split(':'))
-    finish_hour, finish_min = map(int, finish.split(':'))
-    return 60 * (finish_hour - start_hour) + finish_min - start_min
-
-def calculate_fee(fee_info, time):
-    basic_time, basic_fee, time_term, term_fee = fee_info
-    left_time = time - basic_time
-    if left_time > 0:
-        return basic_fee + math.ceil(left_time / time_term) * term_fee
-    return basic_fee
-
-def make_car_info_dict(records):
-    car_dict = {}
-    for record in records:
-        time, num, in_out = record.split()
-        if in_out == out:
-            start_time, time_sum = car_dict[num]
-            time_sum += get_time(start_time, time)
-            car_dict[num] = [None, time_sum]
-        elif num in car_dict:
-            car_dict[num][0] = time
-        else:
-            car_dict[num] = [time, 0]
+class Record:
+    def __init__(self, in_time):
+        self.total_time = 0
+        self.check_time = in_time
+        self.is_in = True
     
-    for num in car_dict.keys():
-        start_time, time_sum = car_dict[num]
-        if start_time != None:
-            time_sum += get_time(start_time, '23:59')
-            car_dict[num] = [None, time_sum]
+    def car_in(self, in_time):
+        self.check_time = in_time
+        self.is_in = True
     
-    return car_dict
-
-def make_fee_list_by_car_dict(car_dict, fee_info):
-    car_nums = sorted(car_dict.keys())
-    return [calculate_fee(fee_info, car_dict[num][1]) for num in car_nums]
+    def car_out(self, out_time):
+        in_time = self.check_time
+        self.total_time += time_calculate(in_time, out_time)
+        self.check_time = out_time
+        self.is_in = False
+    
+    def calculate_fee(self, default_time, default_fee, unit_time, unit_fee):
+        time = self.total_time - default_time
+        if time > 0:
+            return default_fee + math.ceil(time / unit_time) * unit_fee
+        return default_fee
 
 def solution(fees, records):
-    car_dict = make_car_info_dict(records)
-    return make_fee_list_by_car_dict(car_dict, fees)
+    default_time, default_fee, unit_time, unit_fee = fees
+    car_record_dict = {}
+    
+    for record_data in records:
+        time, num, act = record_data.split()
+        if act == 'IN':
+            if num not in car_record_dict:
+                car_record_dict[num] = Record(time)
+            else:
+                car_record_dict[num].car_in(time)
+        elif act == 'OUT':
+            car_record_dict[num].car_out(time)
+            
+    car_nums = sorted(car_record_dict.keys())
+    answer = []
+    
+    for num in car_nums:
+        record = car_record_dict[num]
+        if record.is_in:
+            record.car_out('23:59')
+        fee = record.calculate_fee(default_time, default_fee, unit_time, unit_fee)
+        answer.append(fee)
+    
+    return answer
