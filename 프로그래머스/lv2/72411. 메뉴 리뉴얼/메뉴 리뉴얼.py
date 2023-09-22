@@ -1,20 +1,37 @@
 from collections import Counter
-from itertools import combinations
+from itertools import combinations as comb
 
 MIN_COUNT = 2
 
+# orders에서 num개로 만들수 있는 모든 조합 얻기
+def get_order_combs(num, orders):
+    result_list = []
+    for order in orders:
+        if len(order) < num:
+            break
+        result_list += [''.join(strs) for strs in comb(order, num)]
+    return result_list
+
+# orders로 만든 조합 중 가장 많은 조합들 얻기
+def get_most_common_orders(order_combs):
+    orders = []
+    max_count = MIN_COUNT
+    for k, v in Counter(order_combs).items():
+        if v > max_count:
+            max_count = v
+            orders = [k]
+        elif v == max_count:
+            orders.append(k)
+    return orders
+        
 def solution(orders, course):
     answer = []
+    orders = [''.join(sorted(list(s))) for s in orders]
+    orders.sort(key=len, reverse=True)
+    # 코스 개수 별로 가능한 조합 중 가장 많은 조합을 answer에 담음
     for num in course:
-        result_list = []
-        for order in orders:
-            if len(order) >= num:
-                result_list += (''.join(sorted(list(s))) for s in list(combinations(order, num)))
-        if len(result_list) == 0:
+        order_combs = get_order_combs(num, orders)
+        if len(order_combs) == 0:
             continue
-        order_counter = Counter(result_list)
-        max_count = max(MIN_COUNT, Counter(result_list).most_common(1)[0][1])
-        filtered_order_counter = Counter({k: v for k, v in order_counter.items() if v == max_count})
-        answer += list(filtered_order_counter.keys())
-                
+        answer += get_most_common_orders(order_combs)
     return sorted(answer)
