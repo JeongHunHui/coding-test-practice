@@ -1,10 +1,9 @@
 def solution(s):
-    num_list = []
-    for nums in s[2:-2].split('},{'):
-        num_list.append(list(map(int, nums.split(','))))
-    num_list.sort(key = len)
+    nums_strs = s[2:-2].split('},{')
+    nums_list = [list(map(int, strs.split(','))) for strs in nums_strs]
+    nums_list.sort(key=len)
     answer = []
-    for nums in num_list:
+    for nums in nums_list:
         for num in nums:
             if num not in answer:
                 answer.append(num)
