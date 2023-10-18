@@ -1,15 +1,27 @@
+from math import floor
 from collections import Counter
-import math
 
-const_num = 65536
+CONSTNUM = 65536
 
-def make_set(s):
-    s = s.lower()
-    return Counter([s[i:i+2] for i in range(len(s)-1) if s[i:i+2].isalpha()])
+def strToCounter(s):
+    temp, answer = '', []
+    for c in s:
+        if not c.isalpha():
+            temp = ''
+            continue
+        temp += c.lower()
+        if len(temp) == 2:
+            answer.append(temp)
+            temp = temp[1:]
+    return Counter(answer)
 
 def solution(str1, str2):
-    sets_1 = make_set(str1)
-    sets_2 = make_set(str2)
-    count_1 = sum((sets_1 & sets_2).values())
-    count_2 = sum((sets_1 | sets_2).values())
-    return math.floor(count_1 / count_2 * const_num) if count_2 > 0 else const_num
+    cnt1, cnt2 = strToCounter(str1), strToCounter(str2)
+    allKeys = set(list(cnt1.keys()) + list(cnt2.keys()))
+    inter = 0
+    union = 0
+    for key in allKeys:
+        if key in cnt1 and key in cnt2:
+            inter += min(cnt1[key], cnt2[key])
+        union += max(cnt1[key] if key in cnt1 else 0, cnt2[key] if key in cnt2 else 0)
+    return CONSTNUM if union == 0 else floor(inter/union*CONSTNUM)
