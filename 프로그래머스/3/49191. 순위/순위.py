@@ -1,21 +1,20 @@
-import math
+from collections import defaultdict
 
 def solution(n, results):
-    rank_info_down = [[math.inf]*(n) for _ in range(n)]
-    rank_info_up = [[math.inf]*(n) for _ in range(n)]
-    for a,b in results:
-        rank_info_down[a-1][b-1] = 1
-        rank_info_up[b-1][a-1] = 1
-    
-    for k in range(n):
-        for i in range(n):
-            for j in range(n):
-                rank_info_down[i][j] = min(rank_info_down[i][j], rank_info_down[i][k]+rank_info_down[k][j])
-                rank_info_up[i][j] = min(rank_info_up[i][j], rank_info_up[i][k]+rank_info_up[k][j])
-    
-    count = 0        
-    for i in range(n):
-        if sum([1 for j in range(n) if rank_info_down[i][j] != math.inf]) + sum([1 for j in range(n) if rank_info_up[i][j] != math.inf]) == n-1:
-            count += 1
-    
-    return count
+    # winners: key = 선수 / data = key가 이긴 사람들의 집합
+    # losers: key = 선수 / data = key가 진 사람들의 집합
+    winners, losers = defaultdict(set), defaultdict(set)
+    # 결과를 돌며 dict에 값 삽입
+    for winner, loser in results:
+        winners[winner].add(loser)
+        losers[loser].add(winner)
+    # 모든 선수들에 대해 승자와 패자 업데이트
+    for i in range(1,n+1):
+        # i가 j에게 패배 -> i에게 패배한 선수들(winners[i])은 j에게도 패배함
+        for j in losers[i]:
+            winners[j].update(winners[i])
+        # i가 j에게 승리 -> i에게 승리한 선수들(losers[i])은 j에게도 승리함
+        for j in winners[i]:
+            losers[j].update(losers[i])
+    # 자신이 승리한 사람과 패배한 사람의 수가 n-1이면 순위가 결정된 것
+    return sum([1 for i in range(1,n+1) if len(winners[i])+len(losers[i]) == n-1])
