@@ -1,4 +1,4 @@
-# 22:23
+# 22:24
 import sys
 sys.setrecursionlimit(100000)
 n, m, k = map(int, input().split())
