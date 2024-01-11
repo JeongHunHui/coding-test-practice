@@ -1,4 +1,3 @@
-# 23:44
 temp = ''
 answer = ''
 for c in input():
