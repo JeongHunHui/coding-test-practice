@@ -1,28 +1,16 @@
-temp = ''
-answer = ''
-for c in input():
-    if c == '.':
-        if temp != '':
-            l = len(temp)
-            if l % 2 == 1:
-                answer = '-1'
-                break
-            a_count = l // 4
-            b_count = 0 if l % 4 == 0 else 1
-            answer += 'AAAA'*a_count + 'BB'*b_count
-            temp = ''
-        answer += '.'
-    else:
-        temp += c
+def compress_blocks(s):
+    answer = ''
+    while s:
+        if s[0] == '.':
+            answer += '.'
+            s = s[1:]
+        else:
+            a_count = s.find('.') if s.find('.') != -1 else len(s)
+            if a_count % 2:
+                return '-1'
+            answer += 'AAAA' * (a_count // 4) + 'BB' * ((a_count % 4) // 2)
+            s = s[a_count:]
+    return answer
 
-if temp != '':
-    l = len(temp)
-    if l % 2 == 1:
-        answer = '-1'
-    else:
-        a_count = l // 4
-        b_count = 0 if l % 4 == 0 else 1
-        answer += 'AAAA'*a_count + 'BB'*b_count
-        temp = ''
-
-print(answer)
+result = compress_blocks(input())
+print(result)
