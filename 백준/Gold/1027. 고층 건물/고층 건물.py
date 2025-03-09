@@ -1,4 +1,4 @@
-# 00:21
+# 22:01
 n = int(input())
 buildings = list(map(int, input().split()))
 
